@@ -1,6 +1,5 @@
 import { AnalyticsService } from '../../src/application/services/analytics.service';
 import { Task } from '../../src/infrastructure/database/models';
-import { TaskStatus } from '../../src/domain/enums';
 
 jest.mock('../../src/infrastructure/database/models');
 

@@ -17,7 +17,7 @@ describe('JwtService', () => {
 
   describe('generateAccessToken', () => {
     it('should generate access token with correct payload', () => {
-      const payload = { userId: '123', organizationId: 'org456', role: 'ADMIN' };
+      const payload = { userId: '123', email: 'test@example.com', organizationId: 'org456', role: 'ADMIN' as any };
       const mockToken = 'mock-access-token';
       (jwt.sign as jest.Mock).mockReturnValue(mockToken);
 
@@ -34,7 +34,7 @@ describe('JwtService', () => {
 
   describe('generateRefreshToken', () => {
     it('should generate refresh token with correct payload', () => {
-      const payload = { userId: '123' };
+      const payload = { userId: '123', email: 'test@example.com', organizationId: 'org456', role: 'ADMIN' as any };
       const mockToken = 'mock-refresh-token';
       (jwt.sign as jest.Mock).mockReturnValue(mockToken);
 

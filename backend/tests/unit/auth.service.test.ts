@@ -80,7 +80,7 @@ describe('AuthService', () => {
       (jwtService.generateRefreshToken as jest.Mock).mockReturnValue('refresh-token');
       (RefreshToken.create as jest.Mock).mockResolvedValue({});
 
-      const result = await authService.login('test@example.com', 'Test123!');
+      const result = await authService.login({ email: 'test@example.com', password: 'Test123!' });
 
       expect(result).toHaveProperty('accessToken');
       expect(result).toHaveProperty('refreshToken');
@@ -91,7 +91,7 @@ describe('AuthService', () => {
       (User.findOne as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        authService.login('test@example.com', 'WrongPassword')
+        authService.login({ email: 'test@example.com', password: 'WrongPassword' })
       ).rejects.toThrow('Invalid credentials');
     });
 
@@ -105,7 +105,7 @@ describe('AuthService', () => {
       (passwordService.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(
-        authService.login('test@example.com', 'WrongPassword')
+        authService.login({ email: 'test@example.com', password: 'WrongPassword' })
       ).rejects.toThrow('Invalid credentials');
     });
   });

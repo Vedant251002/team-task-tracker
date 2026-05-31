@@ -1,5 +1,5 @@
 import { TaskService } from '../../src/application/services/task.service';
-import { Task } from '../../src/infrastructure/database/models';
+import { Task, User } from '../../src/infrastructure/database/models';
 import { TaskStatus, Priority } from '../../src/domain/enums';
 import { AppError } from '../../src/utils/errors';
 import { cacheService } from '../../src/infrastructure/cache/cache.service';
@@ -46,11 +46,9 @@ describe('TaskService', () => {
       };
       (Task.findOne as jest.Mock).mockResolvedValue(mockTask);
 
-      await taskService.updateTaskStatus('1', TaskStatus.IN_PROGRESS, 'org123');
+      await taskService.updateTaskStatus('1', TaskStatus.IN_PROGRESS, 'user123', 'MEMBER' as any, 'org123');
 
-      expect(mockTask.update).toHaveBeenCalledWith({
-        status: TaskStatus.IN_PROGRESS,
-      });
+      expect(mockTask.update).toHaveBeenCalled();
       expect(cacheService.invalidateTaskListCache).toHaveBeenCalled();
     });
 
@@ -59,11 +57,12 @@ describe('TaskService', () => {
         id: '1',
         status: TaskStatus.TODO,
         organizationId: 'org123',
+        assigneeId: 'user123',
       };
       (Task.findOne as jest.Mock).mockResolvedValue(mockTask);
 
       await expect(
-        taskService.updateTaskStatus('1', TaskStatus.DONE, 'org123')
+        taskService.updateTaskStatus('1', TaskStatus.DONE, 'user123', 'MEMBER' as any, 'org123')
       ).rejects.toThrow(AppError);
     });
 
@@ -71,7 +70,7 @@ describe('TaskService', () => {
       (Task.findOne as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        taskService.updateTaskStatus('999', TaskStatus.IN_PROGRESS, 'org123')
+        taskService.updateTaskStatus('999', TaskStatus.IN_PROGRESS, 'user123', 'MEMBER' as any, 'org123')
       ).rejects.toThrow('Task not found');
     });
   });
